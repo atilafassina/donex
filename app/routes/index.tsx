@@ -1,32 +1,19 @@
+import { Link } from '@remix-run/react'
+
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
-  );
+    <main className="grid h-screen w-screen grid-rows-[auto_1fr]">
+      <nav className="pt-2 pl-2">
+        <Link to="/login">Login</Link>
+      </nav>
+      <header className="grid place-items-center">
+        <h1 className="p-8 text-orange-200 shadow-lg text-9xl shadow-orange-300">
+          Done
+          <span className="text-orange-400 text-[12rem] relative top-7 font-extralight">
+            X
+          </span>
+        </h1>
+      </header>
+    </main>
+  )
 }

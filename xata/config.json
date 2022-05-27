@@ -1,0 +1,8 @@
+{
+  "schemaFileFormat": "json",
+  "dbName": "donex",
+  "workspaceID": "demos-urucbe",
+  "hooks": {
+    "build": "npx xata-codegen xata -o src/xata.ts"
+  }
+}

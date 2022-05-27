@@ -1,0 +1,22 @@
+{
+  "formatVersion": "1.0",
+  "tables": [
+    {
+      "name": "todos",
+      "columns": [
+        {
+          "name": "message",
+          "type": "string"
+        },
+        {
+          "name": "is_done",
+          "type": "bool"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
