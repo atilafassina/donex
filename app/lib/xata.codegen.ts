@@ -8,11 +8,19 @@ export interface Todo {
 
 export type TodoRecord = Todo & XataRecord;
 
+export interface User {
+  username?: string | null;
+  password?: string | null;
+}
+
+export type UserRecord = User & XataRecord;
+
 export type DatabaseSchema = {
   todos: Todo;
+  users: User;
 };
 
-const links = { todos: [] };
+const links = { todos: [], users: [] };
 
 const DatabaseClient = buildClient();
 

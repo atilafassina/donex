@@ -21,6 +21,7 @@
     "@remix-run/react": "experimental-netlify-edge",
     "@remix-run/server-runtime": "experimental-netlify-edge",
     "@xata.io/client": "^0.8.4",
+    "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
     "isbot": "^3.4.6",
     "react": "^18.0.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@remix-run/dev": "experimental-netlify-edge",
     "@remix-run/eslint-config": "experimental-netlify-edge",
+    "@types/bcryptjs": "^2.4.2",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "@xata.io/codegen": "^0.8.1",

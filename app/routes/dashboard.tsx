@@ -5,20 +5,26 @@ import {
   redirect,
 } from '@remix-run/server-runtime'
 import { useLoaderData } from '@remix-run/react'
-// import { getUserEmail } from '~/lib/session.server'
 import { TodoList } from '~/components/todo-list'
 import { AddTask } from '~/components/add-task'
 import { Logout } from '~/components/logout'
-import { fetchTodos } from '~/lib/db'
+import { fetchTodos, getUsername } from '~/lib/db.server'
 
-export const loader: LoaderFunction = async ({ context }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const todos = await fetchTodos()
+  const user = await getUsername(request)
 
-  return json(todos, {
-    headers: {
-      cacheControl: 's-max-age=1, max-age=1, stale-while-revalidate=600',
+  return json(
+    {
+      todos,
+      user,
     },
-  })
+    {
+      headers: {
+        cacheControl: 's-max-age=1, max-age=1, stale-while-revalidate=600',
+      },
+    }
+  )
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -51,14 +57,15 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function Dashboard() {
-  const { userEmail, inProgress, done } = useLoaderData()
+  const { user, todos } = useLoaderData()
+  const { inProgress, done } = todos
 
   return (
     <>
       <header className="mb-24">
         <Logout />
         <h1 className="block py-16 text-3xl text-center">
-          DoneX list for: {userEmail || 'me'}
+          DoneX list for: {user.username || 'me'}
         </h1>
       </header>
       <div className="w-10/12 mx-auto max-w-prose">

@@ -1,7 +1,7 @@
+import { ActionFunction, redirect } from '@remix-run/server-runtime'
 import { useState } from 'react'
 import { useActionData, useSearchParams } from '@remix-run/react'
-import type { ActionFunction } from '@remix-run/server-runtime'
-// import { login, register } from '~/lib/session.server'
+import { login, registerUser } from '~/lib/db.server'
 import {
   validateUsername,
   validatePassword,
@@ -37,22 +37,25 @@ export const action: ActionFunction = async ({ request }) => {
     })
   }
 
-  const fieldErrors = {
-    username: validateUsername(username),
-    password: validatePassword(password),
-  }
-
-  if (Object.values(fieldErrors).some(Boolean)) {
-    return badRequest(401, { fieldErrors, username, password })
-  }
-
-  // if (action === 'login') {
-  //   return login({ username, password, redirectTo })
+  // const fieldErrors = {
+  //   username: validateUsername(username),
+  //   password: validatePassword(password),
   // }
 
-  // if (action === 'register') {
-  //   return register({ username, password, redirectTo })
+  // if (Object.values(fieldErrors).some(Boolean)) {
+  //   return badRequest(401, { fieldErrors, username, password })
   // }
+
+  console.log(action)
+  if (action === 'login') {
+    return login(username, password)
+  }
+
+  if (action === 'register') {
+    return registerUser(username, password)
+  }
+
+  return redirect('/')
 }
 
 export default function Login() {
@@ -80,7 +83,7 @@ export default function Login() {
               setFormAction(formAction === 'login' ? 'register' : 'login')
             }}
           >
-            {formAction}
+            {formAction === 'login' ? 'register' : 'login'}
           </button>
           <strong className="text-orange-200">
             Get Done

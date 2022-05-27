@@ -17,6 +17,19 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "name": "password",
+          "type": "string"
+        }
+      ]
     }
   ]
 }
