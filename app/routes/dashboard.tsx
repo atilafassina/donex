@@ -1,9 +1,4 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/server-runtime'
+import { ActionFunction, json, LoaderFunction } from '@remix-run/server-runtime'
 import { useLoaderData } from '@remix-run/react'
 import { TodoList } from '~/components/todo-list'
 import { AddTask } from '~/components/add-task'
@@ -11,7 +6,7 @@ import { Logout } from '~/components/logout'
 import { fetchTodos, getUsername } from '~/lib/db.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const todos = await fetchTodos()
+  const todos = await fetchTodos(request)
   const user = await getUsername(request)
 
   return json(
@@ -35,25 +30,25 @@ export const action: ActionFunction = async ({ request }) => {
   //   case 'add-task':
   //     const newTask = formData.get('new-task')
 
-  //   if (typeof newTask === 'string') {
-  //     await addTodo(request, newTask)
+  //     if (typeof newTask === 'string') {
+  //       await addTodo(request, newTask)
+
+  //       return {
+  //         newTask,
+  //       }
+  //     }
+  //   case 'toggle-progress':
+  //     const taskUpdate = {
+  //       id: formData.get('toggle-id') as string,
+  //       state: formData.get('toggle-progress') as TodoState,
+  //     }
+
+  //     await toggleDone(request, taskUpdate)
 
   //     return {
-  //       newTask,
+  //       taskUpdate,
   //     }
-  //   }
-  // case 'toggle-progress':
-  //   const taskUpdate = {
-  //     id: formData.get('toggle-id') as string,
-  //     state: formData.get('toggle-progress') as TodoState,
-  //   }
-
-  //   await toggleDone(request, taskUpdate)
-
-  return {
-    taskUpdate: 'yes',
-    //}
-  }
+  // }
 }
 
 export default function Dashboard() {

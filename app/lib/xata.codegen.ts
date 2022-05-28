@@ -4,13 +4,14 @@ export interface Todo {
   message?: string | null;
   is_done?: boolean | null;
   created_at?: string | null;
+  user?: UserRecord | null;
 }
 
 export type TodoRecord = Todo & XataRecord;
 
 export interface User {
-  username?: string | null;
   password?: string | null;
+  username?: string | null;
 }
 
 export type UserRecord = User & XataRecord;
@@ -20,7 +21,7 @@ export type DatabaseSchema = {
   users: User;
 };
 
-const links = { todos: [], users: [] };
+const links = { todos: [["user", "users"]], users: [] };
 
 const DatabaseClient = buildClient();
 

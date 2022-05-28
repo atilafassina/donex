@@ -31,6 +31,7 @@ const checkIfUserExists = async (username: string) => {
 const getUserId = async (request: Request) => {
   const session = await storage.getSession(request.headers.get('Cookie'))
   const userId = session.get('userId')
+
   if (!userId || typeof userId !== 'string') return null
 
   return userId
@@ -89,8 +90,19 @@ export const registerUser = async (username: string, password: string) => {
   return createUserSession(user.id, '/')
 }
 
-export const fetchTodos = async () => {
-  const inProgress = await xata.db.todos.sort('created_at', 'desc').getMany()
+export const fetchTodos = async (request: Request) => {
+  const userId = (await getUserId(request)) as string
+
+  const inProgress = await xata.db.todos
+    /**
+     * @todo
+     * I think something wrong
+     * with type inference of `.filter()`
+     */
+    // @ts-expect-error
+    .filter('user.id', userId)
+    .sort('created_at', 'desc')
+    .getMany()
 
   const done = await xata.db.todos
     .sort('created_at', 'desc')
@@ -105,4 +117,24 @@ export const fetchTodos = async () => {
     inProgress: inProgress.filter((todo) => todo.is_done !== true),
     done,
   }
+}
+
+function getUserSession(request: Request) {
+  return storage.getSession(request.headers.get('Cookie'))
+}
+
+export async function logout(request: Request) {
+  const session = await getUserSession(request)
+  return redirect('/login', {
+    headers: {
+      'Set-Cookie': await storage.destroySession(session),
+    },
+  })
+}
+
+export async function getUserToken(
+  request: Request
+): Promise<string | undefined> {
+  const sessionCookie = await storage.getSession(request.headers.get('Cookie'))
+  return sessionCookie.get('token')
 }

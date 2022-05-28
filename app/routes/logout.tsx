@@ -3,10 +3,10 @@ import {
   LoaderFunction,
   redirect,
 } from '@remix-run/server-runtime'
-// import { signOut } from '~/lib/session.server'
+import { logout } from '~/lib/db.server'
 
 export const action: ActionFunction = async ({ request }) => {
-  return redirect('/') //signOut(request)
+  return logout(request)
 }
 
 export const loader: LoaderFunction = async () => {

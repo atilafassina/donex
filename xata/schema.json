@@ -15,6 +15,13 @@
         {
           "name": "created_at",
           "type": "string"
+        },
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
         }
       ]
     },
@@ -22,12 +29,12 @@
       "name": "users",
       "columns": [
         {
-          "name": "username",
+          "name": "password",
           "type": "string"
         },
         {
-          "name": "password",
-          "type": "string"
+          "name": "username",
+          "type": "email"
         }
       ]
     }
