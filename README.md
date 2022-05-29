@@ -27,4 +27,6 @@ Prepare your _buzzword bingo_, here’s our stack and architecture:
 
 4. `npm run xata-codegen` will create typescript types, and a file for `XataClient`
 
-5. `npm run dev` will start the app on [3000](http://localhost:3000)
+5. Create an `.env` and add your credentials (you can use `.env.template` as reference)
+
+6. `npm run dev` will start the app on [3000](http://localhost:3000)
