@@ -1,5 +1,5 @@
 import { SESSION_SECRET, XATA_API_KEY } from './environment'
-import { XataClient } from './xata.codegen'
+import { XataClient, Todo as TodoProps } from './xata.codegen'
 import bcrypt from 'bcryptjs'
 import { redirect } from '@remix-run/server-runtime'
 import { createCookieSessionStorage } from '@remix-run/netlify-edge'
@@ -17,7 +17,7 @@ const storage = createCookieSessionStorage({
   },
 })
 
-const xata = new XataClient({
+export const xata = new XataClient({
   branch: 'main',
   apiKey: XATA_API_KEY,
 })
@@ -28,7 +28,7 @@ const checkIfUserExists = async (username: string) => {
   return Boolean(user)
 }
 
-const getUserId = async (request: Request) => {
+export const getUserId = async (request: Request) => {
   const session = await storage.getSession(request.headers.get('Cookie'))
   const userId = session.get('userId')
 
@@ -90,6 +90,11 @@ export const registerUser = async (username: string, password: string) => {
   return createUserSession(user.id, '/')
 }
 
+type FetchTodos = (request: Request) => Promise<{
+  inProgressTodos: TodoProps[]
+  doneTodos: TodoProps[]
+}>
+
 export const fetchTodos = async (request: Request) => {
   const userId = (await getUserId(request)) as string
 
@@ -105,6 +110,13 @@ export const fetchTodos = async (request: Request) => {
     .getMany()
 
   const done = await xata.db.todos
+    /**
+     * @todo
+     * I think something wrong
+     * with type inference of `.filter()`
+     */
+    // @ts-expect-error
+    .filter('user.id', userId)
     .sort('created_at', 'desc')
     .filter('is_done', true)
     .getMany()
@@ -132,9 +144,9 @@ export async function logout(request: Request) {
   })
 }
 
-export async function getUserToken(
-  request: Request
-): Promise<string | undefined> {
-  const sessionCookie = await storage.getSession(request.headers.get('Cookie'))
-  return sessionCookie.get('token')
-}
+// export async function getUserToken(
+//   request: Request
+// ): Promise<string | undefined> {
+//   const sessionCookie = await storage.getSession(request.headers.get('Cookie'))
+//   return sessionCookie.get('token')
+// }

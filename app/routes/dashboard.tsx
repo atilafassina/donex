@@ -4,51 +4,47 @@ import { TodoList } from '~/components/todo-list'
 import { AddTask } from '~/components/add-task'
 import { Logout } from '~/components/logout'
 import { fetchTodos, getUsername } from '~/lib/db.server'
+import { addTodo, TodoState, toggleDone } from '~/lib/todos.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const todos = await fetchTodos(request)
   const user = await getUsername(request)
 
-  return json(
-    {
-      todos,
-      user,
-    },
-    {
-      headers: {
-        cacheControl: 's-max-age=1, max-age=1, stale-while-revalidate=600',
-      },
-    }
-  )
+  // const [todos, user] = Promise.all([fetchTodos, getUsername])
+
+  return {
+    todos,
+    user,
+  }
 }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  // const action = formData.get('_action')
+  const action = formData.get('_action')
 
-  // switch (action) {
-  //   case 'add-task':
-  //     const newTask = formData.get('new-task')
+  switch (action) {
+    case 'add-task':
+      const newTask = formData.get('new-task')
 
-  //     if (typeof newTask === 'string') {
-  //       await addTodo(request, newTask)
+      if (typeof newTask === 'string') {
+        await addTodo(request, newTask)
 
-  //       return {
-  //         newTask,
-  //       }
-  //     }
-  //   case 'toggle-progress':
-  //     const taskUpdate = {
-  //       id: formData.get('toggle-id') as string,
-  //       state: formData.get('toggle-progress') as TodoState,
-  //     }
+        return {
+          newTask,
+        }
+      }
+    case 'toggle-progress':
+      const taskUpdate = {
+        id: formData.get('toggle-id') as string,
+        state: formData.get('toggle-progress') as TodoState,
+      }
 
-  //     await toggleDone(request, taskUpdate)
+      await toggleDone(request, taskUpdate)
 
-  //     return {
-  //       taskUpdate,
-  //     }
-  // }
+      return {
+        taskUpdate,
+      }
+  }
 }
 
 export default function Dashboard() {
