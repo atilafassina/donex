@@ -1,16 +1,15 @@
-import { ActionFunction, json, LoaderFunction } from '@remix-run/server-runtime'
+import type { TodoState } from '~/lib/types'
+import { ActionFunction, LoaderFunction } from '@remix-run/server-runtime'
 import { useLoaderData } from '@remix-run/react'
+import { getUsername } from '~/lib/session.server'
+import { addTodo, fetchTodos, toggleDone } from '~/lib/todos.server'
 import { TodoList } from '~/components/todo-list'
 import { AddTask } from '~/components/add-task'
 import { Logout } from '~/components/logout'
-import { fetchTodos, getUsername } from '~/lib/db.server'
-import { addTodo, TodoState, toggleDone } from '~/lib/todos.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const todos = await fetchTodos(request)
   const user = await getUsername(request)
-
-  // const [todos, user] = Promise.all([fetchTodos, getUsername])
 
   return {
     todos,

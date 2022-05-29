@@ -1,12 +1,44 @@
-import type { Todo as TodoProps } from '~/lib/xata.codegen'
-import type { XataRecord } from '@xata.io/client'
+import type { TodoState } from '~/lib/types'
 import { xata } from '~/lib/db.server'
-import { getUserId } from '~/lib/db.server'
+import { getUserId } from '~/lib/session.server'
 import { redirect } from '@remix-run/server-runtime'
 import { badRequest } from './helpers.server'
 
-export type TodoRecord = TodoProps & XataRecord['xata'] & { id: string }
-export type TodoState = 'ongoing' | 'done'
+export const fetchTodos = async (request: Request) => {
+  const userId = (await getUserId(request)) as string
+
+  const inProgress = await xata.db.todos
+    /**
+     * @todo
+     * I think something wrong
+     * with type inference of `.filter()`
+     */
+    // @ts-expect-error
+    .filter('user.id', userId)
+    .sort('created_at', 'desc')
+    .getMany()
+
+  const done = await xata.db.todos
+    /**
+     * @todo
+     * I think something wrong
+     * with type inference of `.filter()`
+     */
+    // @ts-expect-error
+    .filter('user.id', userId)
+    .sort('created_at', 'desc')
+    .filter('is_done', true)
+    .getMany()
+
+  return {
+    /**
+     * @TODO
+     * workaround for https://github.com/xataio/feedback/discussions/7
+     */
+    inProgress: inProgress.filter((todo) => todo.is_done !== true),
+    done,
+  }
+}
 
 export const addTodo = async (request: Request, task: string) => {
   const userId = (await getUserId(request)) as string

@@ -1,7 +1,7 @@
 import { ActionFunction, redirect } from '@remix-run/server-runtime'
 import { useState } from 'react'
 import { useActionData, useSearchParams } from '@remix-run/react'
-import { login, registerUser } from '~/lib/db.server'
+import { login, registerUser } from '~/lib/session.server'
 import {
   validateUsername,
   validatePassword,
