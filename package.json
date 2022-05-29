@@ -1,8 +1,8 @@
 {
-  "name": "remix-template-netlify",
+  "name": "donex",
   "private": true,
-  "description": "",
-  "license": "",
+  "description": "an edgy todo list",
+  "license": "ISC",
   "sideEffects": false,
   "scripts": {
     "dev:netlify": "cross-env NODE_ENV=development netlify dev",
